@@ -446,7 +446,7 @@ function sortByAsc(arr) {
  * @param {string} str - The string to shuffle.
  * @param {number} iterations - The number of iterations to perform the shuffle.
  * @return {string} The shuffled string.
- *
+ *d
  * @example:
  *  '012345', 1 => '024135'
  *  'qwerty', 1 => 'qetwry'
@@ -457,7 +457,8 @@ function sortByAsc(arr) {
  */
 function shuffleChar(str, iterations) {
   let result = str;
-  const it = iterations % 30;
+  let found = false;
+  let it = iterations;
 
   for (let i = 0; i < it; i += 1) {
     let a = '';
@@ -469,6 +470,13 @@ function shuffleChar(str, iterations) {
     }
 
     result = a + b;
+
+    if (result === str && !found) {
+      found = true;
+      const cycleLength = i + 1;
+      it %= cycleLength;
+      i = -1;
+    }
   }
 
   return result;
