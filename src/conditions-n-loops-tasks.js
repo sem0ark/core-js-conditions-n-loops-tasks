@@ -258,7 +258,7 @@ function isContainNumber(num, digit) {
     if (rest % 10 === digit) return true;
     rest = Math.floor(rest / 10);
   }
-  return -1;
+  return false;
 }
 
 /**
@@ -311,8 +311,46 @@ function getBalanceIndex(arr) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const result = Array(size);
+  const s1 = size - 1;
+
+  for (let i = 0; i < size; i += 1) result[i] = Array(size);
+
+  let counter = 1;
+
+  let y = 0;
+  let x = 0;
+  let yEnd = s1;
+  let xEnd = s1;
+
+  while (y <= yEnd && x <= xEnd) {
+    for (let i = x; i <= xEnd; i += 1) {
+      result[y][i] = counter;
+      counter += 1;
+    }
+    y += 1;
+
+    for (let i = y; i <= yEnd; i += 1) {
+      result[i][xEnd] = counter;
+      counter += 1;
+    }
+    xEnd -= 1;
+
+    for (let i = xEnd; i >= x; i -= 1) {
+      result[yEnd][i] = counter;
+      counter += 1;
+    }
+    yEnd -= 1;
+
+    for (let i = yEnd; i >= y; i -= 1) {
+      result[i][x] = counter;
+      counter += 1;
+    }
+    x += 1;
+  }
+
+  return result;
 }
 
 /**
@@ -330,8 +368,25 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const mt = matrix;
+  const n1 = matrix.length - 1;
+  const n2 = Math.floor(matrix.length / 2);
+
+  for (let y = 0; y < n2; y += 1) {
+    for (let x = 0; x <= n2; x += 1) {
+      const q1 = mt[y][x];
+      const q2 = mt[x][n1 - y];
+      const q3 = mt[n1 - y][n1 - x];
+      const q4 = mt[n1 - x][y];
+
+      mt[y][x] = q4;
+      mt[x][n1 - y] = q1;
+      mt[n1 - y][n1 - x] = q2;
+      mt[n1 - x][y] = q3;
+    }
+  }
+  return mt;
 }
 
 /**
@@ -339,6 +394,8 @@ function rotateMatrix(/* matrix */) {
  * Employ any sorting algorithm of your choice.
  * Take into account that the array can be very large. Consider how you can optimize your solution.
  * In this task, the use of methods of the Array and String classes is not allowed.
+ *
+ * Note: used https://www.csl.mtu.edu/cs2321/www/newLectures/11_Quick_Sort.html
  *
  * @param {number[]} arr - The array to sort.
  * @return {number[]} The sorted array.
@@ -348,8 +405,37 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const a = arr;
+
+  function swap(i, j) {
+    const tmp = a[i];
+    a[i] = a[j];
+    a[j] = tmp;
+  }
+
+  function qsort(l, r) {
+    if (l >= r) return;
+
+    let left = l;
+    let right = r - 1;
+
+    const p = a[r];
+    while (left <= right) {
+      while (left <= right && a[left] <= p) left += 1;
+      while (left <= right && a[right] >= p) right -= 1;
+
+      if (left < right) swap(left, right);
+    }
+
+    swap(left, r);
+
+    qsort(l, left - 1);
+    qsort(left + 1, r);
+  }
+
+  qsort(0, a.length - 1);
+  return a;
 }
 
 /**
@@ -369,8 +455,21 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  let result = str;
+  for (let i = 0; i < iterations; i += 1) {
+    let a = '';
+    let b = '';
+
+    for (let j = 0; j < str.length; j += 1) {
+      if (j % 2 === 0) a += result[j];
+      else b += result[j];
+    }
+
+    result = a + b;
+  }
+
+  return result;
 }
 
 /**
